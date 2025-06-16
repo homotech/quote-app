@@ -1,103 +1,91 @@
-import Image from "next/image";
+"use client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { useState, useEffect } from "react";
+import Header from "./components/header";
 
+type QuoteType = {
+  pickedQuote: string;
+  author: string;
+  text: string;
+};
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [Quote, setQuote] = useState<QuoteType | null>(null);
+  const [Copied, setCopied] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleCopy = () => {
+    navigator.clipboard.writeText(Quote?.text || "");
+    console.log("Copied Successfully");
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 5000);
+  };
+
+  const showContactOptions = () => {
+    setShowContact(!showContact);
+  };
+
+  useEffect(() => {
+    const fetchQuote = async () => {
+      try {
+        const res = await fetch(
+          "https://quote-app-backend-krfd.onrender.com/quote"
+        );
+        const data = await res.json();
+        console.log(data);
+        setQuote(data);
+      } catch (err) {
+        console.error("Error fetching quotes", err);
+      }
+    };
+    fetchQuote();
+  }, []);
+
+  if (!Quote) {
+    return (
+      <div className="flex flex-col items-center justify-center w-screen h-screen font-[family-name:var(--font-poppins)]">
+        <span className="relative flex items-center size-8 mb-4">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+          <span className="relative inline-flex size-8 rounded-full bg-sky-500"></span>
+        </span>
+        <p className="text-md font-medium">Waking the app!</p>
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col gap-8 font-[family-name:var(--font-poppins)] w-screen overflow-hidden px-6 md:px-50 h-screen pt-4">
+        <Header />
+        <div className="mt-4 md:p-8 md:rounded-4xl md:border-2 md:border-gray-700 border-b pb-8">
+          <p className="mb-4 text-purple-900 text-l px-4 py-1 border-2 border-purple-900 bg-purple-100 w-22 rounded-full ">
+            Today
+          </p>
+          <h1 className="text-4xl mb-8"></h1>
+          <h1 className="text-4xl">
+            <span>&quot;</span>
+            {Quote?.pickedQuote}
+            <span>&quot;</span>
+          </h1>
+          <p className="mt-4">-{Quote?.author}</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        <div className="flex gap-8 ">
+          <button
+            onClick={() => handleCopy()}
+            className="hover:text-blue-600 cursor-pointer transition-duration-300"
+          >
+            <FontAwesomeIcon icon={faCopy} className="mr-2" />
+            {Copied ? "Copied" : "Copy this quote"}
+          </button>
+          <button
+            className="hover:text-blue-600 cursor-pointer transition-duration-300"
+            disabled
+          >
+            <FontAwesomeIcon icon={faHeart} className="mr-2" />
+            Add to Favorite
+          </button>
+        </div>
+      </div>
+    );
+  }
 }

@@ -12,7 +12,6 @@ type QuoteType = {
 export default function Home() {
   const [Quote, setQuote] = useState<QuoteType | null>(null);
   const [Copied, setCopied] = useState(false);
-  const [showContact, setShowContact] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(Quote?.text || "");

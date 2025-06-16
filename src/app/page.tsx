@@ -23,10 +23,6 @@ export default function Home() {
     }, 5000);
   };
 
-  const showContactOptions = () => {
-    setShowContact(!showContact);
-  };
-
   useEffect(() => {
     const fetchQuote = async () => {
       try {

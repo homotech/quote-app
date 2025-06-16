@@ -18,7 +18,7 @@ const Header = () => {
         Hire Me
       </button>
       <div
-        className={`flex gap-4 px-4 py-2 bg-gray-100 rounded-lg absolute right-6 md:right-50 top-24 duration-300 ${
+        className={`flex gap-4 px-4 py-2 bg-gray-100 rounded-lg absolute right-6 md:right-50 top-16 duration-300 ${
           showContact ? "opacity-100" : "opacity-0"
         }`}
       >

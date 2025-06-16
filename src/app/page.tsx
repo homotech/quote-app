@@ -14,7 +14,7 @@ export default function Home() {
   const [Copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(Quote?.text || "");
+    navigator.clipboard.writeText(Quote?.pickedQuote || "");
     console.log("Copied Successfully");
     setCopied(true);
     setTimeout(() => {
